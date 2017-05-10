@@ -52,14 +52,20 @@ void backWard(void){
   servoRight.writeMicroseconds(1300);
 }
 
+void grab(void){
+  servoGrab.write(-270);
+}
+
+void release(void){
+  servoGrab.write(90);
+}
+
 void loop() {
   // put your main code here, to run repeatedly:
 headLeft();
 headRight();
 
-Serial.println(servoHead.read());
-Serial.println("grab: ");
-Serial.println(servoGrab.read());
+
 servoGrab.write(-270);
 delay(3000);
 forward();
