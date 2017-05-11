@@ -8,8 +8,8 @@
 #define TRIGGER_PIN_BOTTOM 14 
 #define MAX_DISTANCE 200 //in cm
 
-NewPing UltraSoundTop(TRIGGER_PIN_TOP, ECHO_PIN_TOP, MAX_DISTANCE); //setup function for distance-sensor-TOP
-NewPing UltraSoundBottom(TRIGGER_PIN_BOTTOM, ECHO_PIN_BOTTOM, MAX_DISTANCE); //setup function for distance-sensor-BOTTOM
+NewPing sonarTop(TRIGGER_PIN_TOP, ECHO_PIN_TOP, MAX_DISTANCE); //setup function for distance-sensor-TOP
+NewPing sonarBottom(TRIGGER_PIN_BOTTOM, ECHO_PIN_BOTTOM, MAX_DISTANCE); //setup function for distance-sensor-BOTTOM
 
 Servo servoHead; //definition of servos
 Servo servoLeft;
@@ -64,17 +64,16 @@ void backWard(void){
   servoRight.writeMicroseconds(1300);
 }
 
-void AvoidObstacle()
-{
-  if (InfraRedRight = HIGH ) // Wherever HIGH is mentioned, it means that it is detecting black tape (a function to obtain this 'detection' has still to be written)
-        {if (InfraRedLeft = HIGH) //maybe better to use && in if statements or case 
-          {backWard();
-          delay(1500); // TO BE DEFINED BY TESTING: an appropriate distance has to be driven backwards, in case black tape is monitored on both sides of the front of the robot
+void AvoidObstacle() {
+    
+  if (InfraRedRight = HIGH ) {// Wherever HIGH is mentioned, it means that it is detecting black tape (a function to obtain this 'detection' has still to be written)
+        if (InfraRedLeft = HIGH) { 
+            backWard();
+            delay(1500); // TO BE DEFINED BY TESTING: an appropriate distance has to be driven backwards, in case black tape is monitored on both sides of the front of the robot
           }
-          if(InfraRedLeft = LOW)
-          {
-          turnLeft();
-          delay(1500); // TO BE DEFINED BY TESTING: this delay time has to be sufficient so that it turns 90° to the left
+          if(InfraRedLeft = LOW) {
+            turnLeft();
+            delay(1500); // TO BE DEFINED BY TESTING: this delay time has to be sufficient so that it turns 90° to the left
           }
         }
   if (InfraRedLeft = HIGH)
@@ -99,3 +98,11 @@ void AvoidObstacle()
    } 
   } 
 }
+
+void loop() {
+  UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm
+  UltraSoundBottom = sonarBottom.convert_cm(sonarBottom.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm
+
+
+}
+
