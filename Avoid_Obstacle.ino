@@ -59,33 +59,23 @@ void AvoidObstacle()
 {
   if (InfraRedRight = HIGH ) // Wherever HIGH is mentioned, it means that it is detecting black tape (a function to obtain this 'detection' has still to be written)
         {if (InfraRedLeft = HIGH)
-          {backWard;
+          {backWard();
           delay(1500); // TO BE DEFINED BY TESTING: an appropriate distance has to be driven backwards, in case black tape is monitored on both sides of the front of the robot
           }
           if(InfraRedLeft = LOW)
           {
-          turnLeft;
-          delay(1500); // TO BE DEFINED BY TESTING: this delay time has to be sufficient so that it turns 90° to the left
-          }
-        }
-  if (InfraRedLeft = HIGH)
-          {if (InfraRedRight = HIGH)
-          {backWard;
-          delay(1500); // TO BE DEFINED BY TESTING: an appropriate distance has to be driven backwards, in case black tape is monitored on both sides of the front of the robot
-          }
-          if(InfraRedRight = LOW)
-          {
-          turnRight;
+          turnLeft();
+          turnRight();
           delay(1500); // TO BE DEFINED BY TESTING: this delay time has to be sufficient so that it turns 90° to the right
           }
         }
   if (UltraSoundTop < 15)
   {
-    turnRight;
+    turnRight();
     delay(); // TO BE DEFINED BY TESTING: this delay should be to turn the robot for example 45°
              // The AvoidObstacle function should be looped, this way it checks again after turning 45° to the right, if it then doesnt detect anymore then it can carry on with movement
    if (UltraSoundTop < 15)
-   {turnLeft;
+   {turnLeft();
    delay(); // This delay should be 2x as much as the delay to turnRight, this way it checks if there is an option to avoid the obstacle by driving to the left of it.
    } 
   } 
