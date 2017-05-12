@@ -108,6 +108,51 @@ void AvoidObstacle() {
    } 
   } 
 }
+void DistinguishBorderCliff()
+{ if (InfraRedLeft == 100 && InfraRedRight == 100)
+  {backward();
+  delay();// Need a value so that it drives back sufficiently enough so that it can turn without the backwheel getting in the tape
+  turnRight();
+  delay();// turn right 90°
+  forward();
+  delay ();// 
+  turnLeft();
+  delay();
+  forward();
+  delay();
+  if (InfraRedLeft == 100 || InfraRedRight == 100){Cliff = 0; Border = 1;Stop();}
+  if (InfraRedLeft != 100 && InfraRedRight != 100){Cliff = 1; Border = 0;Stop();}
+  } 
+  
+  if (InfraRedLeft == 100 && InfraRedRight != 100)
+  {backward();
+  delay();// Need a value so that it drives back sufficiently enough so that it can turn without the backwheel getting in the tape
+  turnRight();
+  delay();// turn right 90°
+  forward();
+  delay ();// 
+  turnLeft();
+  delay();
+  forward();
+  delay();
+  if (InfraRedLeft == 100 || InfraRedRight == 100){Cliff = 0; Border = 1;}
+  if (InfraRedLeft != 100 && InfraRedRight != 100){Cliff = 1; Border = 0;}
+  }
+   if (InfraRedLeft != 100 && InfraRedRight == 100)
+  {backward();
+  delay();// Need a value so that it drives back sufficiently enough so that it can turn without the backwheel getting in the tape
+  turnLeft();
+  delay();// turn left 90°
+  forward();
+  delay ();// 
+  turnRight();
+  delay();
+  forward();
+  delay();
+  if (InfraRedLeft == 100 || InfraRedRight == 100){Cliff = 0; Border = 1;}
+  if (InfraRedLeft != 100 && InfraRedRight != 100){Cliff = 1; Border = 0;}
+  }  
+ }
 
 void loop() {
   float UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm
