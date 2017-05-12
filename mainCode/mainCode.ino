@@ -2,10 +2,10 @@
 #include <NewPing.h> //library for using the ultrasonic sensor
 //Define the pins
 #define FRONT_IR 
-#define ECHO_PIN_TOP 11 //ports subject to change
-#define TRIGGER_PIN_TOP 12
-#define ECHO_PIN_BOTTOM 13
-#define TRIGGER_PIN_BOTTOM 14 
+#define ECHO_PIN_TOP 9 //ports subject to change
+#define TRIGGER_PIN_TOP 9
+#define ECHO_PIN_BOTTOM 2
+#define TRIGGER_PIN_BOTTOM 3 
 #define MAX_DISTANCE 200 //in cm
 
 NewPing sonarTop(TRIGGER_PIN_TOP, ECHO_PIN_TOP, MAX_DISTANCE); //setup function for distance-sensor-TOP
@@ -26,6 +26,14 @@ void setup() {
   servoGrab.write(90);
   Serial.begin(9600);
   //attachInterrupt(digitalPinToInterrupt(FRONT_IR), LineStop, RISING);
+}
+
+float readIR(AmountRuns, SensorPin) { //reads average of IR sensors first int, second int the sensor
+  int IRValues;
+  for (int i = 0; i < AmountRuns; i++) {
+    IRValues = IRValues + analogRead(SensorPin);
+  }
+  IRValueMedian = IRValues/AmountRuns;
 }
 
 void headRight(void){
@@ -100,9 +108,13 @@ void AvoidObstacle() {
 }
 
 void loop() {
-  UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm
-  UltraSoundBottom = sonarBottom.convert_cm(sonarBottom.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm
-
+  float UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm
+  float UltraSoundBottom = sonarBottom.convert_cm(sonarBottom.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm
+  Serial.print("distance sensor top: ");
+  Serial.println(UltraSoundTop);
+  //Serial.print("distance sensor Bottom: ");
+  //Serial.println(UltraSoundBottom);
+  delay(1000);
 
 }
 
