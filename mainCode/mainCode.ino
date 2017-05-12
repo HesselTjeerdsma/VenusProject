@@ -28,12 +28,14 @@ void setup() {
   //attachInterrupt(digitalPinToInterrupt(FRONT_IR), LineStop, RISING);
 }
 
-float readIR(AmountRuns, SensorPin) { //reads average of IR sensors first int, second int the sensor
+int readIR(AmountRuns, SensorPin) { //reads average of IR sensors first int, second int the sensor
   int IRValues;
   for (int i = 0; i < AmountRuns; i++) {
     IRValues = IRValues + analogRead(SensorPin);
+    delay(200);
   }
   IRValueMedian = IRValues/AmountRuns;
+  return IRValueMedian;
 }
 
 void headRight(void){
