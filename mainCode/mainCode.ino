@@ -76,12 +76,12 @@ void AvoidObstacle() {
             delay(1500); // TO BE DEFINED BY TESTING: this delay time has to be sufficient so that it turns 90° to the left
           }
         }
-  if (InfraRedLeft = 100)
-          {if (InfraRedRight = 100)
+  if (InfraRedLeft == 100)
+          {if (InfraRedRight == 100)
           {backWard();
           delay(1500); // TO BE DEFINED BY TESTING: an appropriate distance has to be driven backwards, in case black tape is monitored on both sides of the front of the robot
           }
-          if(InfraRedRight = 500)
+          if(InfraRedRight == 500)
           {
           turnRight();
           delay(1500); // TO BE DEFINED BY TESTING: this delay time has to be sufficient so that it turns 90° to the right
