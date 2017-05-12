@@ -66,22 +66,22 @@ void backWard(void){
 
 void AvoidObstacle() {
     
-  if (InfraRedRight = HIGH ) {// Wherever HIGH is mentioned, it means that it is detecting black tape (a function to obtain this 'detection' has still to be written)
-        if (InfraRedLeft = HIGH) { 
+  if (InfraRedRight == 100 ) {// Wherever HIGH is mentioned, it means that it is detecting black tape (a function to obtain this 'detection' has still to be written)
+        if (InfraRedLeft == 100) { 
             backWard();
             delay(1500); // TO BE DEFINED BY TESTING: an appropriate distance has to be driven backwards, in case black tape is monitored on both sides of the front of the robot
           }
-          if(InfraRedLeft = LOW) {
+          if(InfraRedLeft == 500) {
             turnLeft();
             delay(1500); // TO BE DEFINED BY TESTING: this delay time has to be sufficient so that it turns 90° to the left
           }
         }
-  if (InfraRedLeft = HIGH)
-          {if (InfraRedRight = HIGH)
+  if (InfraRedLeft = 100)
+          {if (InfraRedRight = 100)
           {backWard();
           delay(1500); // TO BE DEFINED BY TESTING: an appropriate distance has to be driven backwards, in case black tape is monitored on both sides of the front of the robot
           }
-          if(InfraRedRight = LOW)
+          if(InfraRedRight = 500)
           {
           turnRight();
           delay(1500); // TO BE DEFINED BY TESTING: this delay time has to be sufficient so that it turns 90° to the right
