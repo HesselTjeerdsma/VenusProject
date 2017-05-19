@@ -1,6 +1,7 @@
 void DetectSample() { 
   bool Sample = false;
   bool Wall = false;
+  int Object;
   for (int Steps = 0; Steps < 12; Steps++) {
     servoHead.write(15*Steps);
     delay(1000);
