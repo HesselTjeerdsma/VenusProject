@@ -1,5 +1,8 @@
+
+
 #include <Servo.h> //library for servo control
 #include <NewPing.h> //library for using the ultrasonic sensor
+#include <String.h>
 
 //Define the pins
 #define FRONT_IR 
@@ -8,6 +11,11 @@
 #define ECHO_PIN_BOTTOM 2
 #define TRIGGER_PIN_BOTTOM 3 
 #define MAX_DISTANCE 200 //in cm
+#define INFRARED_LEFT_1 A0
+#define INFRARED_LEFT_2 A1
+#define INFRARED_RIGHT A2
+
+
 
 NewPing sonarTop(TRIGGER_PIN_TOP, ECHO_PIN_TOP, MAX_DISTANCE); //setup function for distance-sensor-TOP
 NewPing sonarBottom(TRIGGER_PIN_BOTTOM, ECHO_PIN_BOTTOM, MAX_DISTANCE); //setup function for distance-sensor-BOTTOM
@@ -20,18 +28,19 @@ Servo servoGrab;
 void setup() 
 {
   //SETUP CODE, runs once
-  servoHead.attach:(10);
+  servoHead.attach(11);
   servoLeft.attach(12);
   servoRight.attach(13);
-  servoGrab.attach(11);
+  servoGrab.attach(10);
   servoHead.write(90);
-  servoGrab.write(90);
+  servoGrab.write(270);
   Serial.begin(9600);
 }
 
-int readIR(AmountRuns, SensorPin) 
+int readIR(int AmountRuns, int SensorPin) 
 { //reads average of IR sensors first int, second int the sensor
   int IRValues;
+  int IRValueMedian;
     for (int i = 0; i < AmountRuns; i++) 
     {
       IRValues = IRValues + analogRead(SensorPin);
@@ -110,60 +119,67 @@ void DriveB(int distance)
 
 void LineFollow()
 {
-  int LeftRight=0; //line on left equals 1, line on the right equals 2, no line following equals 0
+  boolean LineFollow=false; //line on left equals 1, no line following equals 0
   boolean exitLine=false;
-
-if(LeftRight==0)
+  int t=0;
+  Serial.println(INFRARED_LEFT_1);
+    Serial.println(INFRARED_LEFT_2);
+    Serial.println(analogRead(A42));
+if(LineFollow==false)
 {
-  if(INFRARED_LEFT_2 == 100)
+  if(analogRead(INFRARED_LEFT_2) < 150)
   {
     //turnLeftDegree(); // is this necessary?
-    LeftRight=1;
+    LineFollow=true;
   }
-  else if(INFRARED_RIGHT_2== 100){
+  else if(analogRead(INFRARED_RIGHT)< 150){
     //turnRightDegree();
-    LeftRight=2;
+    servoLeft.write(180);
+    servoRight.write(0);
+    delay(200);
+    while(!(analogRead(INFRARED_LEFT_2)<150)){
+    if(t<99999){
+    servoLeft.write(0);
+    servoRight.write(90);
+    t++;}
+    
+  
+    else if(t>=99999){
+      loop();
+    }
+    }
+    LineFollow=true;
   }
+  else if(analogRead(INFRARED_LEFT_1) > 250 && analogRead(INFRARED_LEFT_2) > 250){
+    servoLeft.write(0);
+  servoRight.write(180);
 }
-else if(LeftRight==1 && exitLine == false)
+else if(LineFollow==true && exitLine == false)
 {
-  if(INFRARED_LEFT_1 == 100 && INFRARED_LEFT_2 == 100)
+  if(analogRead(INFRARED_LEFT_1) < 150 && analogRead(INFRARED_LEFT_2) < 150)
   {
       turnRightDegree(5);  //Distance itself a bit from the border
    }
-  else if(INFRARED_lEFT_2== 500) //If it 'lost' the tape
+  else if(analogRead(INFRARED_LEFT_2) > 250) //If it 'lost' the tape
   {
       turnLeftDegree(5);
   }
-  else if(INFRARED_LEFT_1== 500 && INFRARED_LEFT_2== 100)
+  else if(analogRead(INFRARED_LEFT_1)>250 && analogRead(INFRARED_LEFT_2) < 150)
   {
     DriveF(3);
-  }
-}
-else if(LeftRight==2 && exitLine==false)
-{
-  if(INFRARED_RIGHT_1== 100 && INFRARED_RIGHT_2== 100)
-  {
-    turnLeftDegree(5);
-  }
-  else if(INFRARED_RIGHT_2== 500)
-  {
-    turnRightDegree(5);
-  }
-  else if(INFRARED_RIGHT_1== 500 && INFRARED_RIGHT_2== 100)
-  {
-    DriveF(3);
-  }
-}
-else if(exitLine==true)
-{
-  if(INFRARED_lEFT_2== 500 && INFRARED_RIGHT_2== 500)
-  {
-    exitLine = false;
-    LeftRight=0;
   }
 }
 
+else if(exitLine==true)
+{
+  if(analogRead(INFRARED_LEFT_2)> 250 && analogRead(INFRARED_RIGHT) > 250)
+  {
+    exitLine = false;
+    LineFollow=false;
+  }
+}
+
+}
 }
 
 void loop() 
@@ -175,6 +191,7 @@ void loop()
   //Serial.print("distance sensor Bottom: ");
   //Serial.println(UltraSoundBottom);
   delay(1000);
+ LineFollow();
 
 }
 
