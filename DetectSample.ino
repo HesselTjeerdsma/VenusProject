@@ -7,8 +7,8 @@ void DetectSample()
   float UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm
   float UltraSoundBottom = sonarBottom.convert_cm(sonarBottom.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm 
   
-  Sample = 0;
-  Wall = 0;
+  int Sample = 0;
+  int Wall = 0;
   
   if (Sample == 0)
    {
