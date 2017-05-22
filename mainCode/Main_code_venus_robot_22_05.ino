@@ -87,22 +87,22 @@ if(LineFollow == false)
     servoRight.write(180);// RIGHT BACKWARD
     delay(500);
     
-    // while(!(analogRead(INFRARED_LEFT_2)<150))
-    //{
-    //if(t<99999)
-    //{
-    //servoLeft.write(0); //turn right
-    //servoRight.write(90);
-    //t++;
-    //}
+    while(!(analogRead(INFRARED_LEFT_2)<150))
+    {
+    if(t<99999)
+    {
+    servoLeft.write(0); //turn right
+    servoRight.write(90);
+    t++;
+    }
     
   
-   // else if(t>=99999)
-   // {
-   //   loop();
-   // }
+    else if(t>=99999)
+    {
+      loop();
+    }
   }
-    //LineFollow = true;
+    LineFollow = true;
   
 }
   else if(analogRead(INFRARED_LEFT_1) > 250 && analogRead(INFRARED_LEFT_2) > 250){
