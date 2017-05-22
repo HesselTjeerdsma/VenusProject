@@ -122,9 +122,9 @@ void LineFollow()
   boolean LineFollow=false; //line on left equals 1, no line following equals 0
   boolean exitLine=false;
   int t=0;
-  Serial.println(INFRARED_LEFT_1);
-    Serial.println(INFRARED_LEFT_2);
-    Serial.println(analogRead(A42));
+  Serial.println(analogRead(INFRARED_LEFT_1));
+    Serial.println(analogRead(INFRARED_LEFT_2));
+   // Serial.println(analogRead(A4));
 if(LineFollow==false)
 {
   if(analogRead(INFRARED_LEFT_2) < 150)
@@ -136,7 +136,7 @@ if(LineFollow==false)
     //turnRightDegree();
     servoLeft.write(180);
     servoRight.write(0);
-    delay(200);
+    delay(500);
     while(!(analogRead(INFRARED_LEFT_2)<150)){
     if(t<99999){
     servoLeft.write(0);
@@ -149,38 +149,48 @@ if(LineFollow==false)
     }
     }
     LineFollow=true;
-  }
+  
+}
   else if(analogRead(INFRARED_LEFT_1) > 250 && analogRead(INFRARED_LEFT_2) > 250){
     servoLeft.write(0);
   servoRight.write(180);
 }
-else if(LineFollow==true && exitLine == false)
+}
+if(LineFollow==true && exitLine == false)
 {
-  if(analogRead(INFRARED_LEFT_1) < 150 && analogRead(INFRARED_LEFT_2) < 150)
+  Serial.println("OKE");
+  if(analogRead(INFRARED_LEFT_1) < 150)
   {
-      turnRightDegree(5);  //Distance itself a bit from the border
+      servoLeft.write(90);
+    servoRight.write(150);  //Distance itself a bit from the border
+    Serial.println("turnright");
    }
   else if(analogRead(INFRARED_LEFT_2) > 250) //If it 'lost' the tape
   {
-      turnLeftDegree(5);
+    servoLeft.write(150);
+    servoRight.write(90);
+    Serial.println("turnleft");
   }
   else if(analogRead(INFRARED_LEFT_1)>250 && analogRead(INFRARED_LEFT_2) < 150)
   {
-    DriveF(3);
+   servoLeft.write(0);
+   servoRight.write(180);
+    Serial.println("forward");
   }
 }
 
 else if(exitLine==true)
 {
-  if(analogRead(INFRARED_LEFT_2)> 250 && analogRead(INFRARED_RIGHT) > 250)
+  if(analogRead(INFRARED_LEFT_2)> 250 && analogRead(INFRARED_RIGHT) > 200)
   {
     exitLine = false;
     LineFollow=false;
   }
 }
+Serial.println(LineFollow);
 
 }
-}
+
 
 void loop() 
 {
@@ -190,7 +200,7 @@ void loop()
   Serial.println(UltraSoundTop);
   //Serial.print("distance sensor Bottom: ");
   //Serial.println(UltraSoundBottom);
-  delay(1000);
+delay(500);
  LineFollow();
 
 }
