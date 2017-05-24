@@ -1,8 +1,7 @@
 void DetectSample() {
-  
+  bool RockDetected = false;
+  bool SampleDetected = false;
   while(RockDetected == false && SampleDetected == false) {
-    bool RockDetected = false;
-    bool SampleDetected = false;
     int UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm
     int UltraSoundBottom = sonarBottom.convert_cm(sonarBottom.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm 
     if(UltraSoundTop-UltraSoundBottom <= 10) {
@@ -35,6 +34,11 @@ void DetectSample() {
       return;
     }
     
+
+//todo:
+//picking up the sample after detection
+//retrun to line after too many tries
+//actual values
 void setup() {
   // put your setup code here, to run once:
 
