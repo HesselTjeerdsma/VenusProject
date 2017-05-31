@@ -1,3 +1,9 @@
+//todo:
+//picking up the sample after detection
+//retrun to line after too many tries
+//actual values
+
+
 #include <Servo.h> //library for servo control
 #include <NewPing.h> //library for using the ultrasonic sensor
 #include <String.h>
@@ -36,17 +42,46 @@ void setup()
   Serial.begin(9600);
 }
 
-int readIR(int AmountRuns, int SensorPin) 
-{ //reads average of IR sensors first int, second int the sensor
-  int IRValues;
-  int IRValueMedian;
-    for (int i = 0; i < AmountRuns; i++) 
-    {
-      IRValues = IRValues + analogRead(SensorPin);
-      delay(200);
+void stop() {
+  servoRight.writeMicroseconds(1500);
+  servoLeft.writeMicroseconds(1500);
+}
+void DetectSample() {
+  int UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm
+  int UltraSoundBottom = sonarBottom.convert_cm(sonarBottom.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm
+  bool RockDetected = false;
+  bool SampleDetected = false;
+  while(RockDetected == false && SampleDetected == false) {
+    LineFollow(); 
+    if(UltraSoundTop-UltraSoundBottom <= 10) {
+      RockDetected = true;
+      SampleDetected = false;
     }
-  IRValueMedian = IRValues/AmountRuns;
-  return IRValueMedian;
+    else if(UltraSoundTop-UltraSoundBottom >= 10){ //margin of 10, acutal value defined by testing
+      SampleDetected = true;
+      RockDetected = false;
+    }
+   }
+    if(SampleDetected == true) {
+      stop();
+      for(int i; i<50;i++) { //turn robot with fifty steps to detect sample again
+        servoRight.write(180);
+        delay(50); 
+        if(UltraSoundTop-UltraSoundBottom >= 10){ //margin of 10, acutal value defined by testing
+          return; 
+        }
+      }
+    }
+    while(UltraSoundBottom >= 5) {
+     servoLeft.write(180);  // go straight
+     servoRight.write(180); 
+     delay(50);
+     int Tries; //if too long robot needs to return to outer edge because there was no block
+     Tries++;
+     if(Tries >= 100)
+      return;
+    }
+    
 }
 
 void headRight()
@@ -101,18 +136,11 @@ if( lineFollow==true){
 }
 
 }
-
-
-
 void loop(){
   float UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm
-  /*float UltraSoundBottom = sonarBottom.convert_cm(sonarBottom.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm
-  //Serial.print("distance sensor top: ");
-  //Serial.println(UltraSoundTop);
-  //Serial.print("distance sensor Bottom: ");
-  //Serial.println(UltraSoundBottom);
-*/
-   LineFollow();
+  float UltraSoundBottom = sonarBottom.convert_cm(sonarBottom.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm
+  
+   DetectSample();
 /*   Serial.println("IR LEFT 1");
   Serial.println(analogRead(INFRARED_LEFT_1));
   Serial.println("IR LEFT 2");
