@@ -46,7 +46,7 @@ void stop() {
   servoRight.writeMicroseconds(1500);
   servoLeft.writeMicroseconds(1500);
 }
-void DetectSample() {
+void DetectSample(){
   int UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(1)); //pings the distance 5 times, takes the median of close values and converts it to cm
   int UltraSoundBottom = sonarBottom.convert_cm(sonarBottom.ping_median(1)); //pings the distance 5 times, takes the median of close values and converts it to cm
   bool RockDetected = false;
@@ -64,11 +64,15 @@ void DetectSample() {
    }
     if(SampleDetected == true){
       stop();
-      for(int i; i<36;i++) { //turn robot in steps of 5° to detect sample again
-        servoRight.write(5*i);
-        delay(50); 
+      for(int i; i<25;i++){ //turn robot left 90°, then turn robot 180° right to detect sample again
+         servoLeft.write(180);  //Turn left
+         servoRight.write(0);  //
+         delay(50); 
         if(UltraSoundTop-UltraSoundBottom >= 10){ //margin of 10, acutal value defined by testing
-          return; 
+          return;}
+        if( i >=25 && UltraSoundTop-UltraSoundBottom <= 10)
+        {servoLeft.write(1500);  //Turn right
+        servoRight.write(1700);}
         }
       }
     }
