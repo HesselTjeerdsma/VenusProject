@@ -182,7 +182,7 @@ void GotoLab(){
     delay(10);
     float UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(5));
     
-    if(UltraSoundTop < 10){ // Wall or obstacle blocking the way
+    if(UltraSoundTop < 10 || analogRead(INFRARED_FRONT) < 150){ // Wall or obstacle blocking the way
       if(analogRead(topIR) < 800){ // If IR too low, mountain found
           //AvoidObstacle();
           goto obstacle;
