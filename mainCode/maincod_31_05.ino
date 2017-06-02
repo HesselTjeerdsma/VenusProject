@@ -47,8 +47,8 @@ void stop() {
   servoLeft.writeMicroseconds(1500);
 }
 void DetectSample() {
-  int UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm
-  int UltraSoundBottom = sonarBottom.convert_cm(sonarBottom.ping_median(5)); //pings the distance 5 times, takes the median of close values and converts it to cm
+  int UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(1)); //pings the distance 5 times, takes the median of close values and converts it to cm
+  int UltraSoundBottom = sonarBottom.convert_cm(sonarBottom.ping_median(1)); //pings the distance 5 times, takes the median of close values and converts it to cm
   bool RockDetected = false;
   bool SampleDetected = false;
   while(RockDetected == false && SampleDetected == false) {
@@ -57,15 +57,15 @@ void DetectSample() {
       RockDetected = true;
       SampleDetected = false;
     }
-    else if(UltraSoundTop-UltraSoundBottom >= 10){ //margin of 10, acutal value defined by testing
+    else if(UltraSoundTop-UltraSoundBottom >= 10){ //margin of 10, actual value defined by testing
       SampleDetected = true;
       RockDetected = false;
     }
    }
-    if(SampleDetected == true) {
+    if(SampleDetected == true){
       stop();
-      for(int i; i<50;i++) { //turn robot with fifty steps to detect sample again
-        servoRight.write(180);
+      for(int i; i<36;i++) { //turn robot in steps of 5° to detect sample again
+        servoRight.write(5*i);
         delay(50); 
         if(UltraSoundTop-UltraSoundBottom >= 10){ //margin of 10, acutal value defined by testing
           return; 
@@ -74,12 +74,12 @@ void DetectSample() {
     }
     while(UltraSoundBottom >= 5) {
      servoLeft.write(180);  // go straight
-     servoRight.write(180); 
+     servoRight.write(0);// RIGHT FORWARD 
      delay(50);
      int Tries; //if too long robot needs to return to outer edge because there was no block
      Tries++;
-     if(Tries >= 100)
-      return;
+     if(Tries >= 100){
+      return;}
     }
     
 }
