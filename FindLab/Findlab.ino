@@ -150,7 +150,7 @@ void LocateLab(){
   
 }
 
-void LocateLabButWorse(){
+void LocateLabButMaybeBetter(){
 
   int topIR = A3;
   int previousIR = 0; 
@@ -172,7 +172,9 @@ void GotoLab(){
 
   int topIR = A3;
   obstacle:
-  LocateLab(); 
+  LocateLab(); // Find direction of lab
+
+  // Go forward until lab wall
    
   do{
     servoLeft.write(0);
@@ -180,8 +182,8 @@ void GotoLab(){
     delay(10);
     float UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(5));
     
-    if(UltraSoundTop < 10){
-      if(analogRead(topIR) < 800){
+    if(UltraSoundTop < 10){ // Wall or obstacle blocking the way
+      if(analogRead(topIR) < 800){ // If IR too low, mountain found
           //AvoidObstacle();
           goto obstacle;
       }
@@ -193,19 +195,26 @@ void GotoLab(){
   servoRight.writeMicroseconds(1500);
   headLeft();
 
-  float USprevious;
+  float USprevious = 1000;
   float UltraSoundTop;
   float UltraSoundBottom;
-
-  do{   
-    USprevious = sonarTop.convert_cm(sonarTop.ping_median(5));
-    turnRightDegree(10); 
-    UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(5));   
-  }while(USprevious >= UltraSoundTop);
+  float maintainDist;
   
-  turnLeftDegree(10);
+  // Turn robot parallel to wall, by minimizig distance
+  
+  for (int i = 0; i < 360; i = i + 10){ 
+    float UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(5));
+    if(UltraSoundTop <= USprevious){
+      float maintainDist = UltraSoundTop;
+    }
+  USprevious = UltraSoundTop;
+  turnRightDegree(10);
+  }
+  
+  do{turnRightDegree(10); float UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(5));}while(UltraSoundTop > (maintainDist*1.1));
+  maintainDist = sonarTop.convert_cm(sonarTop.ping_median(5));
 
-  float maintainDist = sonarTop.convert_cm(sonarTop.ping_median(5));
+  // Follow wall and enter lab
 
   do{
     float UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(5));
@@ -239,14 +248,12 @@ void GotoLab(){
       servoRight.write(180);
       delay(50);
 
-      turnLeftDegree(180);
-      headRight();
       float UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(5));
       float UltraSoundBottom = sonarBottom.convert_cm(sonarBottom.ping_median(5));
 
-      if(UltraSoundTop > UltraSoundBottom*2){
-        turnRightDegree(90);
-        headLeft();
+      if(UltraSoundTop > UltraSoundBottom*2){ // check if new edge is wall or entrance
+        turnLeftDegree(90);
+        headRight();
         do{
           servoLeft.write(0);
           servoRight.write(180);
@@ -255,16 +262,15 @@ void GotoLab(){
         } while(analogRead(INFRARED_FRONT) > 150);   
         break;
       }
-      else {turnRightDegree(180); headLeft();}
     }
     
   }while(1);
 
-  do{LineFollow();} while(analogRead(INFRARED_FRONT) > 150);
+  do{LineFollow();} while(analogRead(INFRARED_FRONT) > 150); // Follow ramp until second edge
   
   // drop rock sample
   turnRightDegree(180);
-  do{LineFollow();} while(analogRead(INFRARED_FRONT) > 150);
+  do{LineFollow();} while(analogRead(INFRARED_FRONT) > 150); // Follow ramp line until entrance to lab
    
 }
 
@@ -276,10 +282,6 @@ void loop()
   //Serial.println(UltraSoundTop);
   //Serial.print("distance sensor Bottom: ");
   //Serial.println(UltraSoundBottom);
-delay(500);
- LocateLab();
- //LocateLabButWorse();
- //GotoLab();
 
 }
 
