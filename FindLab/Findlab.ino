@@ -251,7 +251,7 @@ void GotoLab(){
       float UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(5));
       float UltraSoundBottom = sonarBottom.convert_cm(sonarBottom.ping_median(5));
 
-      if(UltraSoundTop > UltraSoundBottom*2){ // check if new edge is wall or entrance
+      if((UltraSoundTop + 10) > UltraSoundBottom*2){ // check if new edge is wall or entrance
         turnLeftDegree(90);
         headRight();
         do{
