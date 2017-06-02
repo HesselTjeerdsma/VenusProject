@@ -72,7 +72,8 @@ void DetectSample(){
           return;}
         if( i >=25 && UltraSoundTop-UltraSoundBottom <= 10)
         {servoLeft.write(1500);  //Turn right
-        servoRight.write(1700);}
+        servoRight.write(1700);
+        delay(50);}
         }
       }
     }
