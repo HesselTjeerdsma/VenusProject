@@ -39,13 +39,9 @@ void setup()
   servoGrab.attach(11);
   servoHead.write(90);
   servoGrab.write(0);
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
-void stop() {
-  servoRight.writeMicroseconds(1500);
-  servoLeft.writeMicroseconds(1500);
-}
 void headRight()
 {
   servoHead.write(60);
@@ -69,8 +65,8 @@ void samplePickup() {
 
 
 void DetectSample(){
-  int UltraSoundTop = sonarTop.convert_cm(sonarTop.ping_median(1)); //pings the distance 5 times, takes the median of close values and converts it to cm
-  int UltraSoundBottom = sonarBottom.convert_cm(sonarBottom.ping_median(1)); //pings the distance 5 times, takes the median of close values and converts it to cm
+  int UltraSoundTop = sonarTop.ping_cm(); //pings the distance 5 times, takes the median of close values and converts it to cm
+  int UltraSoundBottom = sonarBottom.ping_cm(); //pings the distance 5 times, takes the median of close values and converts it to cm
   bool MountainDetected = false;
   bool SampleDetected = false;
   while(MountainDetected == false && SampleDetected == false) {
@@ -85,7 +81,8 @@ void DetectSample(){
     }
    }
     if(SampleDetected == true){
-      stop();
+      servoRight.writeMicroseconds(1500);
+      servoLeft.writeMicroseconds(1500);
       Serial.println("FOUND SAMPLE !!!!!!");
       Serial.println("FOUND SAMPLE !!!!!!");
       Serial.println("FOUND SAMPLE !!!!!!");
@@ -113,7 +110,7 @@ void DetectSample(){
 //     int Tries;        //if too long robot needs to return to outer edge because there was no block
 //     Tries++;
 //     if(Tries >= 100){
-//      return;}
+//      return; }
       if(UltraSoundBottom <= 5) {
         samplePickup();
       }
