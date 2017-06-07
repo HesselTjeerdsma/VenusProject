@@ -89,17 +89,12 @@ void DetectSample(){
       Serial.println("FOUND SAMPLE !!!!!!");
       Serial.println("FOUND SAMPLE !!!!!!");
       for(int i; i<25;i++){      //turn robot 180° right to detect sample again
-         servoLeft.write(180);  //Turn left
-         servoRight.write(0);  //
-         delay(50); 
-          if(UltraSoundTop-UltraSoundBottom >= 10){ //margin of 10, acutal value defined by testing
-            return;
-          }
-          if(i >=25 && UltraSoundTop-UltraSoundBottom <= 10) {
+          if(i <=25 && UltraSoundTop-UltraSoundBottom <= 10) {
             servoLeft.write(0);  //Turn right
             servoRight.write(180);
             delay(50);
             }
+        
         } 
       }
       
