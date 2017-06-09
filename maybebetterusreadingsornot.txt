@@ -1,0 +1,15 @@
+int readUS() {
+  int oldValue = sonarTop.ping_cm();
+  int i = 0;
+  something:
+  delay(50);
+  int newValue = sonarTop.ping_cm();
+  if(newValue > 2*oldValue || newValue < 0.5*oldValue) {
+    if(i > 10){return newValue;}  
+    i++;
+    goto something;
+  }
+  else {
+    return newValue;
+  }
+}
